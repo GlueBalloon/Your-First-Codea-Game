@@ -18,8 +18,8 @@ function newBeesScreenVariables()
     }
     BSV.dude = GameObject(asset.builtin.Planet_Cute.Character_Pink_Girl, WIDTH/2, HEIGHT*0.35)
     BSV.dude.hitboxW, BSV.dude.hitboxH = 80, 85
-    BSV.dude.hitboxOffsetY = -15
-    BSV.dpad = DPad(WIDTH - 125, 275)
+    BSV.dude.hitboxOffsetY = -15  
+    BSV.dpad = DPad()
     BSV.dpad:setControlledObject(BSV.dude)
     BSV.customBushLifespan = 8
     BSV.startingBushCount = 6

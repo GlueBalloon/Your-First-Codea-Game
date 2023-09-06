@@ -8,7 +8,7 @@ function BushesScreen()
         dude = GameObject(asset.builtin.Planet_Cute.Character_Pink_Girl, WIDTH/2, HEIGHT*0.35)
         dude.hitboxW, dude.hitboxH = 80, 85
         dude.hitboxOffsetY = -15
-        dpad = DPad(WIDTH - 125, 275)
+        dpad = DPad()
         dpad:setControlledObject(dude)
         createGrassField()
         customBushLifespan = 2
