@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Buffer Order</key>
+	<array>
+		<string>Main</string>
+		<string>TitleScreen</string>
+		<string>IntroScreen</string>
+		<string>MonkeyScreen</string>
+		<string>MoveCuteScreen</string>
+		<string>BushesScreen</string>
+		<string>BeesScreen</string>
+		<string>BeesScreenHelpers</string>
+		<string>GameObject</string>
+		<string>MovementModules</string>
+		<string>DPad</string>
+		<string>BushManagement</string>
+		<string>Utilities</string>
+		<string>BackgroundAnimations</string>
+		<string>RandomizationIdeas</string>
+		<string>SimpleButtons</string>
+		<string>ButtonTables</string>
+	</array>
+</dict>
+</plist>
