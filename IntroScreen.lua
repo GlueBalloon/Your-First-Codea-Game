@@ -3,7 +3,7 @@ function IntroScreen()
     pushStyle()
     fontSize(50)
     font("AmericanTypewriter-Bold")
-    fill(0, 53, 255, 185) -- black text
+    fill(0, 53, 255, 185) -- text
     animateCloudBackground()
     pushMatrix()
     local introText = "Let’s make your first Codea game! \n\n Codea requires programming with the lua language. \n\n But you can use Codea to learn lua!"
