@@ -54,20 +54,3 @@ end
 function DPad:setControlledObject(object)
     self.controlledObject = object
 end
-
--- Screen function
-screenNameIsSetup = false
-
-function screenName()
-    if screenNameIsSetup == false then
-        -- initialization code
-        dude = GameObject(asset.builtin.Planet_Cute.Character_Boy, WIDTH/2, HEIGHT/2)
-        dpad = DPad(100, 100)
-        dpad:setControlledObject(dude)
-        screenNameIsSetup = true
-    end
-    -- main screen code
-    background(255, 255, 255)
-    dude:draw()
-    dpad:draw()
-end

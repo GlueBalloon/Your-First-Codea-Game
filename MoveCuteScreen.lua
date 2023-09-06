@@ -1,5 +1,3 @@
-screenNameIsSetup = false
-
 function MoveCuteScreen()
     -- initialization code
     if not dude then
