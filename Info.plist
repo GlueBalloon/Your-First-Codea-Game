@@ -6,6 +6,7 @@
 	<array>
 		<string>Main</string>
 		<string>TitleScreen</string>
+		<string>TitleScreenHelpers</string>
 		<string>IntroScreen</string>
 		<string>MonkeyScreen</string>
 		<string>MoveCuteScreen</string>
