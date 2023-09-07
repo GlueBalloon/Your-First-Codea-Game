@@ -12,6 +12,7 @@
 		<string>BushesScreen</string>
 		<string>BeesScreen</string>
 		<string>BeesScreenHelpers</string>
+		<string>LeafPoofEffect</string>
 		<string>GameObject</string>
 		<string>MovementModules</string>
 		<string>DPad</string>
