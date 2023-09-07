@@ -418,6 +418,7 @@ parameter.boolean("buttons are draggable", false)
 parameter.boolean("snap_to_grid", false, function()
     SB.useGrid = snap_to_grid
 end)
+parameter.boolean("print_button_position", false)
 
 SB.addTableWithText = function(bText, traceback)
     print(bText, tostring(traceback))
@@ -510,7 +511,9 @@ SB.makeActivatedButtonRespond = function(traceback, touch)
         SB.touchOffset.x = touch.x - (SB.ui[traceback].x * WIDTH)
         SB.touchOffset.y = touch.y - (SB.ui[traceback].y * HEIGHT)
     end
-    
+    if print_button_position and touch.state == ENDED then
+        print("position of tapped button: "..(SB.ui[traceback].x * WIDTH)..", "..SB.ui[traceback].y * HEIGHT)
+    end
     --move button if it should be moved
     if buttons_are_draggable then
         SB.evaluateDrag(traceback, touch)
