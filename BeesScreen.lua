@@ -84,18 +84,10 @@ function BeesScreen()
             -- Check for collisions between bees and the player
             if enemy.width == BSV.beeWidth and areColliding(enemy, BSV.dude) then
                 BSV.gameState = "lost"
-                activatedButton = nil
                 return
             end
             
             enemy:draw()
-        end
-        
-        for i = #BSV.enemies, 1, -1 do
-            if BSV.enemies[i].toBeRemoved then
-                local enemy = table.remove(BSV.enemies, i)
-                enemy = nil
-            end
         end
         
         BSV.dpad:draw()
