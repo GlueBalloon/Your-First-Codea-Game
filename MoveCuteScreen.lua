@@ -3,7 +3,7 @@ function MoveCuteScreen()
     if not dude then
         local dudeImageAsset = asset.builtin.Planet_Cute.Character_Pink_Girl
         dude = GameObject(dudeImageAsset, WIDTH/2, HEIGHT*0.35)
-        dpad = DPad(WIDTH - 125, 275)
+        dpad = DPad()
         dpad:setControlledObject(dude)
         createGrassField()
     end

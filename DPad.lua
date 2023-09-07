@@ -11,11 +11,11 @@ function DPad:init(x, y)
     --Calculate a default x and y
     local dpadWidth = 2 * self.buttonDistance + self.buttonSize
     local dpadHeight = 2 * self.buttonDistance + self.buttonSize
-    local dpadX = WIDTH - (dpadWidth *  0.6) -- a small margin from the right edge of the screen
-    local dpadY = dpadHeight * 0.8 -- a small margin from the bottom edge of the screen
+    local dpadX = WIDTH - (dpadWidth *  0.55) -- a small margin from the right edge of the screen
+    local dpadY = dpadHeight * 0.95 -- a small margin from the bottom edge of the screen
     --Assign other values
     self.x = x or dpadX
-    self.y = y or dpadY
+    self.y = x or dpadY
     self.controlledObject = nil
     self.isHeldDown = {up = false, down = false, left = false, right = false}
 end
