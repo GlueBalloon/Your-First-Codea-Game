@@ -8,7 +8,7 @@ function BeesScreen()
     
     --animated background
     drawGrassField()
-    
+
     if BSV.gameState == "playing" then
         
         --instructions

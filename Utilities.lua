@@ -127,15 +127,17 @@ function bounceAppear(gameObject)
     tween(0.5, gameObject, {width = originalW, height = originalH}, {easing = tween.easing.bounceOut})
 end
 
-function bounceVanish(gameObject)
+function bounceVanish(gameObject, duration)
+    local duration = duration or 0.9
     -- Save the original dimensions
     local originalW, originalH = gameObject.width, gameObject.height
     
     -- Tween the scale to 0 with a bounce effect
-    tween(0.75, gameObject, {width = 0, height = 0}, {easing = tween.easing.elasticOut})
+    tween(duration, gameObject, {width = 0, height = 0}, {easing = tween.easing.elasticOut})
 end
 
-function fadeVanish(gameObject)
+function fadeVanish(gameObject, duration)
+    local duration = duration or 0.3
     -- Store the original dimensions and alpha
     local originalW, originalH = gameObject.width, gameObject.height
     local originalAlpha = 255 -- Assuming the object starts fully opaque
@@ -151,7 +153,7 @@ function fadeVanish(gameObject)
     end
     
     -- Tween the scale and alpha values
-    tween(0.3, gameObject, {width = targetW, height = targetH, alpha = targetAlpha}, {easing = tween.easing.linear, onComplete = function()
+    tween(duration, gameObject, {width = targetW, height = targetH, alpha = targetAlpha}, {easing = tween.easing.linear, onComplete = function()
             -- Reset the gameObject's properties if needed after the animation
             gameObject.width, gameObject.height = originalW, originalH
             gameObject.alpha = originalAlpha
