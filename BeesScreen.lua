@@ -29,7 +29,7 @@ function BeesScreen()
         font("Georgia")
         fontSize(30)
         if BSV.gameState == "playing" then
-            button("Nice! Let's keep going!", function()
+            button("You did it!", function()
                 beesScreenSetup = false
                 dude = nil
                 BSV = nil

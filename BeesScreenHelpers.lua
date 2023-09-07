@@ -188,7 +188,7 @@ function drawGameLostUI()
     font("Georgia-Bold")
     fontSize(math.max(WIDTH, HEIGHT) * 0.06)
     text("Game Over! You got stung!", WIDTH/2, HEIGHT * 0.8)
-    textInRect("By the way, your snooping tasks are:\n\n A) make the bees faster (increase the number for 'BSV.enemySpeed') \n\n B) add a random-scattering-leaves effect to picking up bushes (add 'leafPoofEffect' to the list 'BSV.pickupFunctions')", WIDTH/2, HEIGHT*0.5, WIDTH*0.95, HEIGHT*0.35)
+    textInRect("By the way, your snooping tasks are:\n\n A) make the bees faster (increase the number for 'BSV.enemySpeed') \n\n B) add a random-scattering-leaves effect to picking up bushes (add 'leafPoofEffect' to the list 'BSV.pickupFunctions')", WIDTH/2, HEIGHT*0.5, WIDTH*0.9, HEIGHT*0.35)
     fontSize(math.max(WIDTH, HEIGHT) * 0.03)
     button("Restart", function()
         beesScreenSetup = false
