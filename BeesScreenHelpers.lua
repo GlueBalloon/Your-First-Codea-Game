@@ -91,12 +91,14 @@ end
 
 function drawBeesScreenInstructions()
     pushStyle()
+    noTint()
     fill(32, 36, 86, 153)
     font("Georgia")
     fontSize(50)
     textAlign(CENTER)
-    local bushScreenText = "Change the image used for enemies \n\n and how fast they move"
-    textInRect(bushScreenText, WIDTH/2, HEIGHT*0.7, WIDTH*0.95, HEIGHT*0.45)
+    local bushScreenText = "Wait, what? An actual game here? YES! :) \n\n Collect 15 bushes without getting stung to win."
+    textInRect(bushScreenText, WIDTH/2, HEIGHT*0.7, WIDTH*0.95, HEIGHT*0.5)
+    popStyle()
 end
 
 function killBeesOnDeadBushes(BSV)
@@ -167,6 +169,7 @@ function drawGameLostUI()
     fill(255, 0, 0)
     fontSize(60)
     text("You got stung!", WIDTH/2, HEIGHT/2)
+    text("\n\n To move to the next screen, a) make the bees faster, and b) add a random-scattering-leaves effect to picking up bushes. \n\n Hints: increase the number for BSV.enemySpeed, and add 'leafPoofEffect' to the list called pickupFunctions")
     button("Restart", function()
         print("you tapped Restart")
         beesScreenSetup = false
@@ -185,6 +188,7 @@ function drawGameWonUI(BSV)
     text("Time taken: " .. timeTaken, WIDTH/2, HEIGHT/2)
     fontSize(30)
     text("Try to do it quicker!", WIDTH/2, HEIGHT/2 - 50)
+    text("\n\n To move to the next screen, a) make the bees faster, and b) add a random-scattering-leaves effect to picking up bushes. \n\n Hints: increase the number for BSV.enemySpeed, and add 'leafPoofEffect' to the list called pickupFunctions")
     button("Restart", function()
         print("you tapped Restart")
         beesScreenSetup = false
