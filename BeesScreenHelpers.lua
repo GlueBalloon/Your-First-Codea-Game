@@ -1,19 +1,20 @@
 function newBeesScreenVariables()
     local BSV = {}
     BSV.gameState = "playing"
+    BSV.winningScore = 15
     BSV.startTime = os.clock()
     BSV.endTime = 0
     BSV.collectables = {}
     BSV.enemies = {}
     BSV.bushBees = {}
-    BSV.enemySpeed = 2
+    BSV.enemySpeed = 3
     BSV.score = 0
     BSV.scoreSpecs = {
         r = 99,
         g = 255,
         b = 0,
         a = 175,
-        size = 60
+        size = math.max(WIDTH, HEIGHT) * 0.06
     }
     BSV.dude = GameObject(asset.builtin.Planet_Cute.Character_Pink_Girl, WIDTH/2, HEIGHT*0.35)
     BSV.dude.hitboxW, BSV.dude.hitboxH = 80, 85
@@ -24,6 +25,13 @@ function newBeesScreenVariables()
     BSV.startingBushCount = 6
     BSV.beeWidth = 58
     BSV.beeHeight = 29
+    BSV.pickupFunctions = {
+        fadeBushOut,
+        updateScore,
+        spawnNewBee,
+        releaseBeesOnBush,
+        leafPoofEffect
+    }
     BSV.pickupAction = function(gameObject)
         handlePickup(gameObject, BSV)
     end
@@ -31,14 +39,7 @@ function newBeesScreenVariables()
 end
 
 function handlePickup(gameObject, BSV)
-    local pickupFunctions = {
-        fadeBushOut,
-        updateScore,
-        checkWinCondition,
-        spawnNewBee,
-        releaseBeesOnBush,
-    }
-    for _, func in ipairs(pickupFunctions) do
+    for _, func in ipairs(BSV.pickupFunctions) do
         func(gameObject, BSV)
     end
 end
@@ -52,8 +53,8 @@ function updateScore(_, BSV)
     animateScore(BSV)
 end
 
-function checkWinCondition(_, BSV)
-    if BSV.score >= 15 then
+function checkWinCondition(BSV)
+    if BSV.score >= BSV.winningScore then
         BSV.gameState = "won"
         BSV.endTime = os.clock()
     end
@@ -80,8 +81,11 @@ function releaseBeesOnBush(gameObject, BSV)
 end
 
 function animateScore(BSV)
-    tween(0.15, BSV.scoreSpecs, {size = 70, r = 255, g = 0, b = 0}, tween.easing.outQuad, function()
-        tween(0.15, BSV.scoreSpecs, {size = 60, r = 99, g = 255, b = 0}, tween.easing.inQuad)
+    local originalSize = BSV.scoreSpecs.size
+    local pulseSize = BSV.scoreSpecs.size * 1.5
+    local pulseColor = color(239, 255, 0)
+    tween(0.15, BSV.scoreSpecs, {size = pulseSize, r = pulseColor.r, g = pulseColor.g, b = pulseColor.b}, tween.easing.outQuad, function()
+        tween(0.15, BSV.scoreSpecs, {size = originalSize, r = 99, g = 255, b = 0}, tween.easing.inQuad)
     end)
 end
 
@@ -93,12 +97,23 @@ function drawBeesScreenInstructions()
     pushStyle()
     noTint()
     fill(32, 36, 86, 153)
-    font("Georgia")
+    font("Georgia-Bold")
     fontSize(50)
     textAlign(CENTER)
-    local bushScreenText = "Wait, what? An actual game here? YES! :) \n\n Collect 15 bushes without getting stung to win."
+    local bushScreenText = "Wait, what? An actual game? \n\n YES! :) \n\n Collect 15 bushes without getting stung to win."
     textInRect(bushScreenText, WIDTH/2, HEIGHT*0.7, WIDTH*0.95, HEIGHT*0.5)
     popStyle()
+end
+
+function updateBees(BSV)
+    tint(239, 206, 54) --make bees yellow
+    for i, enemy in ipairs(BSV.enemies) do
+        enemy.timeAlive = enemy.timeAlive + DeltaTime
+        moveBee(enemy, BSV)
+        shrinkBeeIfTouchingABush(enemy, BSV)
+        enemy:draw()
+    end
+    noTint()
 end
 
 function killBeesOnDeadBushes(BSV)
@@ -153,44 +168,47 @@ function moveBee(bee, BSV)
     bee:move(math.cos(angle) * BSV.enemySpeed, math.sin(angle) * BSV.enemySpeed)
 end
 
-function setGameOverIfTouching(bee, dude, BSV)
-    if bee.width == BSV.beeWidth and areColliding(bee, dude) then
-        BSV.gameState = "lost"
+function checkLoseCondition(BSV)
+    for i, bee in ipairs(BSV.enemies) do
+        if bee.width == BSV.beeWidth and areColliding(bee, BSV.dude) then
+            BSV.gameState = "lost"
+        end
     end
 end
 
 function drawScore(BSV)
+    font("Georgia-Italic")
     fill(BSV.scoreSpecs.r, BSV.scoreSpecs.g, BSV.scoreSpecs.b, BSV.scoreSpecs.a)
     fontSize(BSV.scoreSpecs.size)
     text("Score: " .. BSV.score, WIDTH/2, 60)
 end
 
 function drawGameLostUI()
-    fill(255, 0, 0)
-    fontSize(60)
-    text("You got stung!", WIDTH/2, HEIGHT/2)
-    text("\n\n To move to the next screen, a) make the bees faster, and b) add a random-scattering-leaves effect to picking up bushes. \n\n Hints: increase the number for BSV.enemySpeed, and add 'leafPoofEffect' to the list called pickupFunctions")
+    fill(129, 30, 33, 196)
+    font("Georgia-Bold")
+    fontSize(math.max(WIDTH, HEIGHT) * 0.06)
+    text("Game Over! You got stung!", WIDTH/2, HEIGHT * 0.8)
+    textInRect("By the way, your snooping tasks are:\n\n A) make the bees faster (increase the number for 'BSV.enemySpeed') \n\n B) add a random-scattering-leaves effect to picking up bushes (add 'leafPoofEffect' to the list 'BSV.pickupFunctions')", WIDTH/2, HEIGHT*0.5, WIDTH*0.95, HEIGHT*0.35)
+    fontSize(math.max(WIDTH, HEIGHT) * 0.03)
     button("Restart", function()
-        print("you tapped Restart")
         beesScreenSetup = false
     end)
 end
 
 function drawGameWonUI(BSV)
-    fill(0, 255, 0)
-    fontSize(60)
-    text("You won!", WIDTH/2, HEIGHT/2 + 50)
     local duration = (BSV.endTime - BSV.startTime) * 1000
     local seconds = math.floor(duration / 1000)
     local milliseconds = math.floor(duration % 1000)
     local timeTaken = string.format("%d.%03d seconds", seconds, milliseconds)
-    fontSize(40)
-    text("Time taken: " .. timeTaken, WIDTH/2, HEIGHT/2)
-    fontSize(30)
-    text("Try to do it quicker!", WIDTH/2, HEIGHT/2 - 50)
-    text("\n\n To move to the next screen, a) make the bees faster, and b) add a random-scattering-leaves effect to picking up bushes. \n\n Hints: increase the number for BSV.enemySpeed, and add 'leafPoofEffect' to the list called pickupFunctions")
-    button("Restart", function()
-        print("you tapped Restart")
+    fill(0, 255, 0)
+    font("Georgia-Bold")
+    fontSize(math.max(WIDTH, HEIGHT) * 0.07)
+    text("You won!", WIDTH/2, HEIGHT * 0.85)
+    fontSize(math.max(WIDTH, HEIGHT) * 0.04)
+    text("Your time: "..timeTaken.." - try to best it!", WIDTH/2, HEIGHT * 0.73)
+    textInRect("By the way, your snooping tasks are:\n\n A) make the bees faster (increase the number for 'BSV.enemySpeed') \n\n B) add a random-scattering-leaves effect to picking up bushes (add 'leafPoofEffect' to the list 'BSV.pickupFunctions')", WIDTH/2, HEIGHT*0.45, WIDTH*0.7, HEIGHT*0.35)
+    fontSize(math.max(WIDTH, HEIGHT) * 0.03)
+    button("Play again", function()
         beesScreenSetup = false
     end)
 end

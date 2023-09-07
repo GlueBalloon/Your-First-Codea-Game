@@ -5,8 +5,17 @@ local screens = {
     MoveCuteScreen = MoveCuteScreen,
     BushesScreen = BushesScreen,
     BeesScreen = BeesScreen
-    -- and so on...
 }
+
+function tableContains(table, element)
+    for _, value in pairs(table) do
+        if value == element then
+            return true
+        end
+    end
+    return false
+end
+
 
 function startupScreen()
     -- Read the progress variable from local storage

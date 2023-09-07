@@ -15,7 +15,7 @@ function MoveCuteScreen()
     fill(37, 78, 40, 181)
     font("Optima-ExtraBlack")
     textAlign(CENTER)
-    MoveCuteScreenText = "Hey, here’s a movable little dude! \n\n Snoop out where dudeImageAsset is set. \n\n Then change the text Character_Boy to Character_Pink_Girl!"
+    MoveCuteScreenText = "Hey, a movable little dude! \n\n Let's change their image. Snoop out where dudeImageAsset is set. \n\n Then change the text 'Character_Boy' to 'Character_Pink_Girl!'"
     textInRect(MoveCuteScreenText, WIDTH/2, HEIGHT*3.75/5, WIDTH*4.8/5, HEIGHT/2.5)
     dude:draw()
     dpad:draw()

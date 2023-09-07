@@ -3,16 +3,16 @@
 DPad = class()
 
 function DPad:init(x, y)
-    -- Determine the biggest side of the screen
-    local biggestSide = math.max(WIDTH, HEIGHT)
+    -- Determine the smallest side of the screen
+    local smallestSide = math.min(WIDTH, HEIGHT)
     -- Calculate button size and distance based on the biggest side of the screen
-    self.buttonSize = biggestSide / 10
+    self.buttonSize = smallestSide / 8
     self.buttonDistance = self.buttonSize * 0.725
     --Calculate a default x and y
     local dpadWidth = 2 * self.buttonDistance + self.buttonSize
     local dpadHeight = 2 * self.buttonDistance + self.buttonSize
-    local dpadX = WIDTH - dpadWidth / 2 - 30  -- 10 is a small margin from the right edge of the screen
-    local dpadY = dpadHeight  -- 10 is a small margin from the bottom edge of the screen
+    local dpadX = WIDTH - (dpadWidth *  0.6) -- a small margin from the right edge of the screen
+    local dpadY = dpadHeight * 0.8 -- a small margin from the bottom edge of the screen
     --Assign other values
     self.x = x or dpadX
     self.y = y or dpadY

@@ -29,7 +29,7 @@ function BushesScreen()
     font("Georgia")
     fontSize(50)
     textAlign(CENTER)
-    local bushScreenText = "Look, bushes to pick up! \n\n To move on: \n\n a) find the code for this screen and make bushes use the Tree_Ugly asset instead of Tree_Short \n\n b) make bushes disappear faster by changing customBushLifespan to 2"
+    local bushScreenText = "Look, bushes to pick up! \n\n A) change the bush images. Find the code for 'BushesScreen' and make bushes use the 'Tree_Ugly' asset instead of 'Tree_Short'. \n\n B) make bushes disappear faster. Change 'customBushLifespan' to 2"
     textInRect(bushScreenText, WIDTH/2, HEIGHT*0.7, WIDTH*0.95, HEIGHT*0.45)
     
     --game components
