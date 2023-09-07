@@ -557,6 +557,35 @@ SB.evaluateDrag = function (traceback, touch)
     end
 end
 
+function round(num)
+    return math.floor(num + 0.5)
+end
+
+SB.evaluateDrag = function (traceback, touch)
+    if touch.state == MOVING then
+        local x, y = touch.x - SB.touchOffset.x, touch.y - SB.touchOffset.y
+        
+        -- Rounds x and y if using grid
+        if SB.useGrid then
+            local gridSpacing = SB.gridSpacing
+            local halfWidth = WIDTH / 2
+            local halfHeight = HEIGHT / 2
+            
+            -- Adjust x and y to align with the middle of the screen
+            x = halfWidth + round((x - halfWidth) / gridSpacing) * gridSpacing
+            y = halfHeight + round((y - halfHeight) / gridSpacing) * gridSpacing
+        end   
+        
+        -- Make x and y into percentages of width and height
+        x, y = x / WIDTH, y / HEIGHT
+        -- Store x and y on tables
+        SB.ui[traceback].x = x
+        SB.ui[traceback].y = y
+    end
+end
+
+
+
 SB.writeDeletableButtons = function (dataString, deletableDataString, deletableComment)
     local buttonTablesTab = readProjectTab("ButtonTables")
     local commentStart, commentEnd = buttonTablesTab:find(deletableComment)
