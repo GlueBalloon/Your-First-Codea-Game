@@ -36,7 +36,7 @@ function setLeafTweens(leaf)
     local rotationDirection = math.random(2) == 1 and 1 or -1
     local rotationAmount = rotationDirection * math.random(90, 360) * rotationSpeedFactor
     tween(0.4, leaf, {rotation = leaf.rotation + rotationAmount}, tween.easing.inQuad)
-    tween(0.35, leaf, {alpha = 0}, tween.easing.inQuad)
+    tween(0.39, leaf, {alpha = 0}, tween.easing.inQuad)
 end
 
 function addLeafDrawingTo(bush, leaves)

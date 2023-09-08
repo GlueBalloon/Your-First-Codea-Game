@@ -64,7 +64,7 @@ function spawnNewBee(gameObject, BSV)
     local practicalX = gameObject.x + gameObject.hitboxOffsetX
     local practicalY = gameObject.y + gameObject.hitboxOffsetY
     local newBee = GameObject(asset.builtin.Platformer_Art.Battor_Flap_1, practicalX, practicalY, BSV.beeWidth * 0.5, BSV.beeHeight * 0.5)
-    newBee.movementModule = BuzzMotionModule(newBee, math.random(3, 9))
+    newBee.movementModule = ZoomFastInDifferentDirectionsModule(newBee)
     newBee.timeAlive = 0
     animateBeeGrowth(newBee, BSV)
     table.insert(BSV.enemies, newBee)

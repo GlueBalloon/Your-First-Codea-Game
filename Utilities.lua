@@ -4,7 +4,8 @@ local screens = {
     MonkeyScreen = MonkeyScreen,
     MoveCuteScreen = MoveCuteScreen,
     BushesScreen = BushesScreen,
-    BeesScreen = BeesScreen
+    BeesScreen = BeesScreen,
+    AvatarChoosingScreen = AvatarChoosingScreen
 }
 
 function tableContains(table, element)

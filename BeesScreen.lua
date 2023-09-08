@@ -34,8 +34,8 @@ function BeesScreen()
                 dude = nil
                 BSV = nil
                 deleteGrassField()
-                setStartupScreen("TitleScreen")
-                currentScreen = TitleScreen
+                setStartupScreen("AvatarChoosingScreen")
+                currentScreen = AvatarChoosingScreen
             end)
         end
     end

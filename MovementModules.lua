@@ -63,16 +63,40 @@ ZoomFastInDifferentDirectionsModule = class(MovementModule)
 
 function ZoomFastInDifferentDirectionsModule:init(target)
     MovementModule.init(self, target)
-    self.direction = vec2(math.random(-1, 1), math.random(-1, 1))
+    self.direction = self:generateRandomDirection()
+    self.speed = self.speed or 3.5  -- Default speed
+    self.timeElapsed = 0
+    self.directionChangeInterval = 2  -- Default to 2 seconds, but you can adjust this value
+end
+
+function ZoomFastInDifferentDirectionsModule:generateRandomDirection()
+    local angle = math.random(1, 359) * (math.pi / 180)  -- Convert to radians
+    return vec2(math.cos(angle), math.sin(angle))
 end
 
 function ZoomFastInDifferentDirectionsModule:move(dx, dy)
-    self.gameObj.x = self.gameObj.x + self.direction.x
-    self.gameObj.y = self.gameObj.y + self.direction.y
-    if self.gameObj.x < 0 or self.gameObj.x > WIDTH or self.gameObj.y < 0 or self.gameObj.y > HEIGHT then
-        self.direction = vec2(math.random(-1, 1), math.random(-1, 1))
+    local dt = DeltaTime  -- Assuming DeltaTime gives the time since the last frame
+    
+    self.gameObj.x = self.gameObj.x + self.direction.x * self.speed
+    self.gameObj.y = self.gameObj.y + self.direction.y * self.speed
+    self.timeElapsed = self.timeElapsed + dt
+    
+    -- Check if the bee has gone too far off the screen
+    local offScreenMargin = 100  -- Adjust this value as needed
+    if self.gameObj.x < -offScreenMargin or self.gameObj.x > WIDTH + offScreenMargin or 
+    self.gameObj.y < -offScreenMargin or self.gameObj.y > HEIGHT + offScreenMargin then
+        -- Point the bee back towards the center of the screen
+        local angleToCenter = math.atan(HEIGHT/2 - self.gameObj.y, WIDTH/2 - self.gameObj.x)
+        self.direction = vec2(math.cos(angleToCenter), math.sin(angleToCenter))
+    end
+    
+    if self.timeElapsed >= self.directionChangeInterval then
+        self.direction = self:generateRandomDirection()
+        self.timeElapsed = 0  -- Reset the timer
     end
 end
+
+
 
 
 --[[
