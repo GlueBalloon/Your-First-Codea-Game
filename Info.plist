@@ -14,7 +14,8 @@
 		<string>BeesScreen</string>
 		<string>BeesScreenHelpers</string>
 		<string>AvatarChoosingScreen</string>
-		<string>LeafPoofEffect</string>
+		<string>YourGameScreen</string>
+		<string>YourGameScreenHelpers</string>
 		<string>GameObject</string>
 		<string>MovementModules</string>
 		<string>DPad</string>
