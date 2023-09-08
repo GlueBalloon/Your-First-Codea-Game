@@ -15,6 +15,11 @@ local avatarOptions = {
 function AvatarChoosingScreen()
     -- Initialization code
     if not avatarChoosingSetUp then
+        
+        YGV = newYourGameVariables()
+        
+        maxAvatarW = 300
+        
         local savedAvatarChoice = readLocalData("avatarChoice", 1)
         local savedAvatarSize = readLocalData("avatarSize", 100)
         
@@ -22,7 +27,7 @@ function AvatarChoosingScreen()
             saveLocalData("avatarChoice", value)
         end)
         
-        parameter.number("avatarSize", 20, 250, savedAvatarSize, function(value)
+        parameter.number("avatarSize", 20, maxAvatarW, savedAvatarSize, function(value)
             saveLocalData("avatarSize", value)
         end)
         
@@ -35,29 +40,33 @@ function AvatarChoosingScreen()
     fill(37, 78, 40, 181)
     font("Optima-ExtraBlack")
     textAlign(CENTER)
-    local introText = "Choose your game avatar and avatar size using the sliders!"
-    textInRect(introText, WIDTH/2, HEIGHT*4/5, WIDTH*4.8/5, HEIGHT/4)
-    
     -- Draw the sprite based on the chosen asset
     local chosenAsset = avatarOptions[avatarChoice]
+    if avatarChoice == #avatarOptions then
+        chosenAsset = YGV.avatarAsset
+    end
     local imageW, imageH = spriteSize(chosenAsset)
     
     -- Calculate the height based on the adjusted width and original aspect ratio
     local aspectRatio = imageH / imageW
     local spriteW = avatarSize
     local spriteH = spriteW * aspectRatio
-    
-    sprite(chosenAsset, WIDTH/2, HEIGHT/2, spriteW, spriteH)
+    local halfMaxW = maxAvatarW/2
+    local halfCuteCharacterMaxH = 507/2
+    local previewX = WIDTH - halfMaxW - 15
+    local previewY = HEIGHT - halfCuteCharacterMaxH - 15
+    rectMode(CENTER)
+    rect(previewX, previewY, maxAvatarW, halfCuteCharacterMaxH * 2)
+    sprite(chosenAsset, previewX, previewY, spriteW, spriteH)
     
     -- If the last sprite is chosen, display 'custom' text on it
     if avatarChoice == #avatarOptions then
-        fill(0, 0, 0) -- Black text
-        fontSize(30)
-        text("custom", WIDTH/2, HEIGHT/2)
+        textInRect("custom", previewX, previewY, maxAvatarW, 100)
     end
     
-    -- Make a test "Your Game Values" table to test against
-    local YGV = newYourGameVariables()
+    local introText = "Choose your game avatar and avatar size using the sliders!"
+    local spaceLeftoverFromAvatarW = WIDTH - maxAvatarW - 15
+    textInRect(introText, (spaceLeftoverFromAvatarW / 2) + 7, previewY, spaceLeftoverFromAvatarW - 15, halfCuteCharacterMaxH * 2)
     
     pushStyle()
     textMode(CORNER)
@@ -73,8 +82,7 @@ function AvatarChoosingScreen()
             local aspectRatio = ygvImageH / ygvImageW
             local ygvSpriteW = YGV.avatarSize
             local ygvSpriteH = ygvSpriteW * aspectRatio
-            local maxChoosableSize = 250
-            if YGV.avatarSize > maxChoosableSize then
+            if YGV.avatarSize > maxAvatarW then
                 text("assigned avatar size too large", WIDTH*0.08, HEIGHT* 0.3)
             else
                 sprite(YGV.avatarImage, displayX, displayY, ygvSpriteW, ygvSpriteH)
@@ -106,7 +114,9 @@ function AvatarChoosingScreen()
     local assetsMatch = assetsMatchIfChoiceIsNotCustom or assetIsNotPlaceholderIfChoiceIsCustom
     if assetsMatch and decimalsCloseEnough then
         button("Proceed to Next Screen", function()
-            -- Logic to move to the next screen
+            YGV = nil
+            setStartupScreen("TitleScreen")
+            currentScreen = TitleScreen
         end)
     end
     
