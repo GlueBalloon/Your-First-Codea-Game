@@ -40,6 +40,7 @@ function AvatarChoosingScreen()
     fill(37, 78, 40, 181)
     font("Optima-ExtraBlack")
     textAlign(CENTER)
+    
     -- Draw the sprite based on the chosen asset
     local chosenAsset = avatarOptions[avatarChoice]
     if avatarChoice == #avatarOptions then
@@ -53,7 +54,7 @@ function AvatarChoosingScreen()
     local spriteH = spriteW * aspectRatio
     local halfMaxW = maxAvatarW/2
     local halfCuteCharacterMaxH = 507/2
-    local previewX = WIDTH - halfMaxW - 15
+    local previewX = halfMaxW + 15
     local previewY = HEIGHT - halfCuteCharacterMaxH - 15
     rectMode(CENTER)
     rect(previewX, previewY, maxAvatarW, halfCuteCharacterMaxH * 2)
@@ -66,7 +67,8 @@ function AvatarChoosingScreen()
     
     local introText = "Choose your game avatar and avatar size using the sliders!"
     local spaceLeftoverFromAvatarW = WIDTH - maxAvatarW - 15
-    textInRect(introText, (spaceLeftoverFromAvatarW / 2) + 7, previewY, spaceLeftoverFromAvatarW - 15, halfCuteCharacterMaxH * 2)
+    textInRect(introText, WIDTH - (spaceLeftoverFromAvatarW / 2) - 7, previewY, spaceLeftoverFromAvatarW - 15, halfCuteCharacterMaxH * 2)
+    
     
     pushStyle()
     textMode(CORNER)
