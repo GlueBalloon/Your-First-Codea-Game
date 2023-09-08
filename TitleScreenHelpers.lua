@@ -1,3 +1,4 @@
+
 function textAlongArc(textString, x, y)
     local totalWidth = textSize(textString)
     totalWidth = totalWidth * 1.25

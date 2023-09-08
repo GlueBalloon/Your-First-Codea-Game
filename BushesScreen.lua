@@ -1,5 +1,4 @@
 
-
 function BushesScreen()
     -- initialization code
     if not bushScreenSetup then

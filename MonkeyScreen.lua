@@ -1,5 +1,4 @@
 
--- Function for the Challenge Screen
 function MonkeyScreen()
     if not bigEmoji then
         bigEmoji = "🐒"
