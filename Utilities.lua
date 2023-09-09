@@ -56,26 +56,33 @@ function adjustFontSizeToFit(text, targetWidth)
 end
 
 -- function to draw text within a rectangle with adjusted font size
-function textInRect(textString, x, y, width, height)
+function textInRect(textString, x, y, width, height, drawRect)
+    drawRect = drawRect or false
+    pushStyle()
     -- Set word wrap value
     textWrapWidth(width)
     
     -- Adjust font size until text fits within specified height
     fontSize(1)
+    local increment = 0.1
     local currentFontSize = fontSize()
     local _, textHeight = textSize(textString)
     while textHeight < height do
-        currentFontSize = currentFontSize + 0.2
+        currentFontSize = currentFontSize + increment
         fontSize(currentFontSize)
         _, textHeight = textSize(textString)
     end
-    
-    -- Draw text
+    fontSize(currentFontSize - increment)
     textMode(CENTER)
-    text(textString, x, y + height / 2 - textHeight / 2)
-    
-    -- Reset font size
-    fontSize(currentFontSize)
+    rectMode(CENTER)
+    if drawRect then
+        fill(255, 165, 0, 111)
+        rect(x, y, width, height)
+    end
+    -- Draw text
+    text(textString, x, y)
+    popStyle()
+    --fontSize(currentFontSize)
 end
 
 function bounceAppear(gameObject)
