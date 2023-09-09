@@ -39,6 +39,7 @@ function AvatarChoosingScreen()
     
     background(220, 220, 220) -- Light gray background for visibility
     fill(37, 78, 40, 181)
+    strokeWidth(2)
     font("Optima-ExtraBlack")
     textAlign(CENTER)
     rectMode(CENTER)
@@ -96,23 +97,26 @@ function AvatarChoosingScreen()
         rect(lowerLeftQuadrantX, lowerLeftQuadrantY, textQuadrantWidth, textQuadrantHeight)
         rect(lowerRightQuadrantX, lowerRightQuadrantY, avatarQuadrantWidth, avatarQuadrantHeight)
         rect(upperRightQuadrantX, upperRightQuadrantY + (textQuadrantHeight * 0.3), textQuadrantWidth - 30, (textQuadrantHeight * 0.4) - 30)
-        rect(upperRightQuadrantX, upperRightQuadrantY - (textQuadrantHeight / 4) + 15, textQuadrantWidth - 30, textQuadrantHeight / 2)
+        rect(upperRightQuadrantX, upperRightQuadrantY - (textQuadrantHeight * 0.25) + 30, (textQuadrantWidth * 0.94) - 30, textQuadrantHeight * 0.56)
         rect(lowerLeftQuadrantX, lowerLeftQuadrantY, textQuadrantWidth - 30, textQuadrantHeight - 30)
     end
     
     --upper left sprite and text 
+    stroke(67, 131, 163, 93)
+    fill(67, 131, 163, 30)
+    roundedRectangle{x = upperLeftQuadrantX, y = upperLeftQuadrantY, w = maxAvatarW, h = halfCuteCharacterMaxH * 2, radius = 80}
     sprite(chosenAsset, upperLeftQuadrantX, upperLeftQuadrantY, spriteW, spriteH)
     fill(22, 17, 16)
     fontSize(14)
     local sliderAssetString = assetNameAsShownInCode(tostring(avatarOptions[avatarChoice]))
-    text(sliderAssetString, upperLeftQuadrantX, upperLeftQuadrantY - (avatarQuadrantHeight / 2) + 30)
+    text(sliderAssetString, upperLeftQuadrantX, upperLeftQuadrantY - halfCuteCharacterMaxH - 15)
     
     --upper right texts and visualization rects
     fill(37, 78, 40, 181)
     local introTitle = "Now let's start making YOUR game!" 
     local introText = "First, using the parameter sliders to the left, choose the avatar you want and set its size.\n\nWrite down the asset name (below the avatar) and the size shown on the slider.\n\nThen snoop to find the function 'newYourGameVariables'. In it, replace the values given to 'YGV.avatarAsset' and 'YGV.avatarSize' with the ones you wrote down."
     textInRect(introTitle, upperRightQuadrantX, upperRightQuadrantY + (textQuadrantHeight * 0.3), textQuadrantWidth - 30, (textQuadrantHeight * 0.4) - 30)
-    textInRect(introText, upperRightQuadrantX, upperRightQuadrantY - (textQuadrantHeight / 4) + 15, textQuadrantWidth - 30, textQuadrantHeight / 2)
+    textInRect(introText, upperRightQuadrantX, upperRightQuadrantY - (textQuadrantHeight * 0.25) + 30, (textQuadrantWidth * 0.94) - 30, textQuadrantHeight * 0.56)
     
     --lower left texts
     local assetString = tostring(YGV.avatarAsset)
@@ -124,9 +128,13 @@ function AvatarChoosingScreen()
     text("Size: " .. sizeText, lowerLeftQuadrantX - (avatarQuadrantWidth / 2) + 15, lowerLeftQuadrantY - 40)
     
     --lower left sprite
+    stroke(67, 89, 163, 107)
+    fill(67, 89, 163, 32)
+    roundedRectangle{x = lowerRightQuadrantX, y = lowerRightQuadrantY, w = maxAvatarW, h = halfCuteCharacterMaxH * 2, radius = 80}
     if YGV.avatarSize <= maxAvatarW then
         sprite(YGV.avatarImage, lowerRightQuadrantX, lowerRightQuadrantY, ygvSpriteW, ygvSpriteH)
     else
+        fill(255, 0, 0, 50) -- Red with 50% transparency for visualization
         text("assigned avatar size too large", lowerRightQuadrantX, lowerRightQuadrantY)
     end
     
