@@ -107,7 +107,7 @@ function AvatarChoosingScreen()
         drawVisualizationRect(quadrants.lowerRight, avatarQuadrantWidth, avatarQuadrantHeight)
     end
         
-    -- Draw upper left quadrant
+    -- Draw asset preview in upper left quadrant
     local chosenLabel = assetNameAsShownInCode(tostring(chosenAsset))
     drawAvatarWithBackgroundAndLabel(quadrants.upperLeft, chosenAsset, spriteW, spriteH, chosenLabel)
     -- If the last choice is selected, overlay the word "custom" on top
@@ -121,27 +121,21 @@ function AvatarChoosingScreen()
     end
     
     -- Draw the intro title and text in the upper right quadrant
-
     local introTitle = "Now let's start making YOUR game!"
-    local introText = "First, using the parameter sliders to the left, choose the avatar you want and set its size.\n\nWrite down the asset name (below the avatar) and the width shown on the slider.\n\nThen snoop to find the function 'newYourGameVariables'. In it, replace the values given to 'YGV.avatarAsset' and 'YGV.avatarWidth' with the ones you wrote down."
     textInRect(introTitle, quadrants.upperRight.x, quadrants.upperRight.y + (textQuadrantHeight * 0.3), textQuadrantWidth - 30, (textQuadrantHeight * 0.4) - 30)
+    local introText = "First, using the parameter sliders to the left, choose the avatar you want and set its size.\n\nWrite down the asset name (below the avatar) and the width shown on the slider.\n\nThen snoop to find the function 'newYourGameVariables'. In it, replace the values given to 'YGV.avatarAsset' and 'YGV.avatarWidth' with the ones you wrote down."
     textInRect(introText, quadrants.upperRight.x, quadrants.upperRight.y - (textQuadrantHeight * 0.25) + 30, (textQuadrantWidth * 0.94) - 30, textQuadrantHeight * 0.56)
     
-    -- Draw the asset and size texts in the lower left quadrant
-    local assetString = assetNameAsShownInCode(tostring(YGV.avatarAsset))
-    local assetName = assetString
-    local sizeText = YGV.avatarWidth == 1 and "not set" or tostring(YGV.avatarWidth)
-    fontSize(WIDTH * 0.033)
-    text("Asset: " .. assetName, quadrants.lowerLeft.x - (avatarQuadrantWidth / 2) + 15, quadrants.lowerLeft.y)
-    text("Size: " .. sizeText, quadrants.lowerLeft.x - (avatarQuadrantWidth / 2) + 15, quadrants.lowerLeft.y - 40)
-    
-    -- Draw lower right quadrant
+    -- Draw asset area in lower right quadrant
     local ygvImageW, ygvImageH = spriteSize(YGV.avatarImage)
     local ygvSpriteW = YGV.avatarWidth
     local ygvSpriteH = ygvSpriteW * (ygvImageH / ygvImageW)
     local ygvLabel = assetNameAsShownInCode(tostring(YGV.avatarAsset))
     drawAvatarWithBackgroundAndLabel(quadrants.lowerRight, YGV.avatarImage, ygvSpriteW, ygvSpriteH, ygvLabel)
     
+    -- Draw the texts in the lower left quadrant
+    local additionalText = "If you want different art, put the slider to the last choice, and change the code to any custom asset you like.\n\nTo the right is the current 'YGV.avatarAsset' at the current 'YGV.avatarWidth'\n\nOnce it matches the choices you made in the upper left, we'll go on to choosing the background for your game."
+    textInRect(additionalText, quadrants.lowerLeft.x, quadrants.lowerLeft.y + 30, (textQuadrantWidth * 0.8) - 30, textQuadrantHeight * 0.598)
     
     popStyle()
        
@@ -149,12 +143,10 @@ function AvatarChoosingScreen()
     local roundedAvatarWidth = math.floor(YGV.avatarWidth * 100 + 0.5) / 100 -- Round to two decimal places
     local epsilon = 0.01  -- A small threshold for floating-point comparison
     local decimalsCloseEnough = math.abs(roundedAvatarWidth - avatarWidth) < epsilon
-    local assetsMatchIfChoiceIsNotCustom = avatarChoice ~= #avatarOptions and YGV.avatarAsset == avatarOptions[avatarChoice]
-    local assetIsNotPlaceholderIfChoiceIsCustom = avatarChoice == #avatarOptions and YGV.avatarAsset ~= asset.builtin.Cargo_Bot.Star
-    local assetsMatch = assetsMatchIfChoiceIsNotCustom or assetIsNotPlaceholderIfChoiceIsCustom
+    local assetsMatch = YGV.avatarAsset == avatarOptions[avatarChoice]
     if assetsMatch and decimalsCloseEnough then
         button("Proceed to Next Screen", function()
-            YGV = nil
+            avatarChoosingSetUp = false
             setStartupScreen("TitleScreen")
             currentScreen = TitleScreen
         end)
