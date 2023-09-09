@@ -34,6 +34,7 @@ function AvatarChoosingScreen()
         avatarChoosingSetUp = true
     end
     
+
     pushStyle()
     
     background(220, 220, 220) -- Light gray background for visibility
@@ -41,70 +42,87 @@ function AvatarChoosingScreen()
     font("Optima-ExtraBlack")
     textAlign(CENTER)
     
-    -- Draw the sprite based on the chosen asset
+    -- Calculate the areas needed for the avatar previews
     local chosenAsset = avatarOptions[avatarChoice]
     if avatarChoice == #avatarOptions then
         chosenAsset = YGV.avatarAsset
     end
     local imageW, imageH = spriteSize(chosenAsset)
-    
-    -- Calculate the height based on the adjusted width and original aspect ratio
     local aspectRatio = imageH / imageW
     local spriteW = avatarSize
     local spriteH = spriteW * aspectRatio
     local halfMaxW = maxAvatarW/2
     local halfCuteCharacterMaxH = 507/2
-    local previewX = halfMaxW + 15
-    local previewY = HEIGHT - halfCuteCharacterMaxH - 15
-    rectMode(CENTER)
-    rect(previewX, previewY, maxAvatarW, halfCuteCharacterMaxH * 2)
-    sprite(chosenAsset, previewX, previewY, spriteW, spriteH)
-    
-    -- If the last sprite is chosen, display 'custom' text on it
-    if avatarChoice == #avatarOptions then
-        textInRect("custom", previewX, previewY, maxAvatarW, 100)
-    end
-    
-    local introText = "Choose your game avatar and avatar size using the sliders!"
-    local spaceLeftoverFromAvatarW = WIDTH - maxAvatarW - 15
-    textInRect(introText, WIDTH - (spaceLeftoverFromAvatarW / 2) - 7, previewY, spaceLeftoverFromAvatarW - 15, halfCuteCharacterMaxH * 2)
-    
     
     pushStyle()
-    textMode(CORNER)
-    fontSize(30)
     
-    -- Display the assigned asset at the assigned size
-    local displayX, displayY = WIDTH/4, HEIGHT/3
-    if YGV.avatarAsset == asset.builtin.Cargo_Bot.Star then
-        text("not set", displayX, displayY)
-    else
-        if YGV.avatarImage ~= nil then
-            local ygvImageW, ygvImageH = spriteSize(YGV.avatarImage)
-            local aspectRatio = ygvImageH / ygvImageW
-            local ygvSpriteW = YGV.avatarSize
-            local ygvSpriteH = ygvSpriteW * aspectRatio
-            if YGV.avatarSize > maxAvatarW then
-                text("assigned avatar size too large", WIDTH*0.08, HEIGHT* 0.3)
-            else
-                sprite(YGV.avatarImage, displayX, displayY, ygvSpriteW, ygvSpriteH)
-            end
-        else
-            text("Asset type not supported for display", displayX, displayY)
-        end
+    background(220, 220, 220) -- Light gray background for visibility
+    fill(37, 78, 40, 181)
+    font("Optima-ExtraBlack")
+    textAlign(CENTER)
+    
+    -- Calculate the dimensions for each quadrant
+    local avatarQuadrantWidth = maxAvatarW + 30
+    local textQuadrantWidth = WIDTH - avatarQuadrantWidth
+    local avatarQuadrantHeight = math.max(HEIGHT / 2, 507 + 30) -- 507 = max height of cute characters
+    local textQuadrantHeight = HEIGHT - avatarQuadrantHeight
+    
+    -- Define the X & Y values for each quadrant
+    local upperLeftQuadrantX = avatarQuadrantWidth / 2
+    local upperLeftQuadrantY = HEIGHT - (avatarQuadrantHeight / 2)
+    local upperRightQuadrantX = WIDTH - (textQuadrantWidth / 2)
+    local upperRightQuadrantY = HEIGHT - (textQuadrantHeight / 2)
+    local lowerLeftQuadrantX = textQuadrantWidth / 2
+    local lowerLeftQuadrantY = textQuadrantHeight / 2
+    local lowerRightQuadrantX = WIDTH - (avatarQuadrantWidth / 2)
+    local lowerRightQuadrantY = avatarQuadrantHeight / 2
+    
+    -- Draw rectangles to visualize each quadrant
+    rectMode(CENTER)
+    fill(255, 0, 0, 50) -- Red with 50% transparency for visualization
+    rect(upperLeftQuadrantX, upperLeftQuadrantY, avatarQuadrantWidth, avatarQuadrantHeight)
+    rect(upperRightQuadrantX, upperRightQuadrantY, textQuadrantWidth, textQuadrantHeight)
+    rect(lowerLeftQuadrantX, lowerLeftQuadrantY, textQuadrantWidth, textQuadrantHeight)
+    rect(lowerRightQuadrantX, lowerRightQuadrantY, avatarQuadrantWidth, avatarQuadrantHeight)
+    
+    -- Upper Left Quadrant: Draw the sprite based on the chosen asset
+    local chosenAsset = avatarOptions[avatarChoice]
+    if avatarChoice == #avatarOptions then
+        chosenAsset = YGV.avatarAsset
     end
+    local imageW, imageH = spriteSize(chosenAsset)
+    local aspectRatio = imageH / imageW
+    local spriteW = avatarSize
+    local spriteH = spriteW * aspectRatio
+    sprite(chosenAsset, upperLeftQuadrantX, upperLeftQuadrantY, spriteW, spriteH)
     
-    -- Display text values for asset and size
+    -- Upper Right Quadrant: Display intro text
+    local introText = "Now let's start making YOUR game!"
+    rect(upperRightQuadrantX, upperRightQuadrantY + (textQuadrantHeight / 4), textQuadrantWidth - 30, (textQuadrantHeight / 2) - 30)
+    textInRect(introText, upperRightQuadrantX, upperRightQuadrantY + (textQuadrantHeight / 4), textQuadrantWidth - 30, (textQuadrantHeight / 2) - 30)
+    
+    -- Lower Left Quadrant: Display text values for asset and size
+    rect(lowerLeftQuadrantX, lowerLeftQuadrantY, textQuadrantWidth - 30, textQuadrantHeight - 30)
     local assetString = tostring(YGV.avatarAsset)
     assetString = assetNameAsShownInCode(assetString)
     local assetName = assetString
     local sizeText = YGV.avatarSize == 1 and "not set" or tostring(YGV.avatarSize)
-    
     fontSize(WIDTH * 0.033)
-    text("Asset: " .. assetName, WIDTH*0.08, HEIGHT*0.2)
-    text("Size: " .. sizeText, WIDTH*0.08, HEIGHT*0.16)
-    popStyle()
+    text("Asset: " .. assetName, lowerLeftQuadrantX - (avatarQuadrantWidth / 2) + 15, lowerLeftQuadrantY)
+    text("Size: " .. sizeText, lowerLeftQuadrantX - (avatarQuadrantWidth / 2) + 15, lowerLeftQuadrantY - 40)
     
+    -- Lower Right Quadrant: Display the assigned asset at the assigned size
+    local ygvImageW, ygvImageH = spriteSize(YGV.avatarImage)
+    local aspectRatio = ygvImageH / ygvImageW
+    local ygvSpriteW = YGV.avatarSize
+    local ygvSpriteH = ygvSpriteW * aspectRatio
+    if YGV.avatarSize <= maxAvatarW then
+        sprite(YGV.avatarImage, lowerRightQuadrantX, lowerRightQuadrantY, ygvSpriteW, ygvSpriteH)
+    else
+        text("assigned avatar size too large", lowerRightQuadrantX, lowerRightQuadrantY)
+    end
+    
+    popStyle()
     
     
     -- Check if the user's values match the slider values
