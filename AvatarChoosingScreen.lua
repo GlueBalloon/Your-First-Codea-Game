@@ -37,10 +37,10 @@ function AvatarChoosingScreen()
     
     pushStyle()
     
-    background(220, 220, 220) -- Light gray background for visibility
+    background(158, 176, 154) -- Light gray background for visibility
     fill(37, 78, 40, 181)
     strokeWidth(2)
-    font("Optima-ExtraBlack")
+    font("ArialRoundedMTBold")
     textAlign(CENTER)
     rectMode(CENTER)
     
@@ -106,10 +106,10 @@ function AvatarChoosingScreen()
     fill(67, 131, 163, 30)
     roundedRectangle{x = upperLeftQuadrantX, y = upperLeftQuadrantY, w = maxAvatarW, h = halfCuteCharacterMaxH * 2, radius = 80}
     sprite(chosenAsset, upperLeftQuadrantX, upperLeftQuadrantY, spriteW, spriteH)
-    fill(22, 17, 16)
+    fill(255)
     fontSize(14)
     local sliderAssetString = assetNameAsShownInCode(tostring(avatarOptions[avatarChoice]))
-    text(sliderAssetString, upperLeftQuadrantX, upperLeftQuadrantY - halfCuteCharacterMaxH - 15)
+    text(sliderAssetString, upperLeftQuadrantX, upperLeftQuadrantY - halfCuteCharacterMaxH + 15)
     
     --upper right texts and visualization rects
     fill(37, 78, 40, 181)
@@ -129,7 +129,7 @@ function AvatarChoosingScreen()
     
     --lower left sprite
     stroke(67, 89, 163, 107)
-    fill(67, 89, 163, 32)
+    fill(67, 89, 163, 45)
     roundedRectangle{x = lowerRightQuadrantX, y = lowerRightQuadrantY, w = maxAvatarW, h = halfCuteCharacterMaxH * 2, radius = 80}
     if YGV.avatarSize <= maxAvatarW then
         sprite(YGV.avatarImage, lowerRightQuadrantX, lowerRightQuadrantY, ygvSpriteW, ygvSpriteH)
@@ -137,6 +137,10 @@ function AvatarChoosingScreen()
         fill(255, 0, 0, 50) -- Red with 50% transparency for visualization
         text("assigned avatar size too large", lowerRightQuadrantX, lowerRightQuadrantY)
     end
+    fill(255)
+    fontSize(14)
+    local ygvAssetString = assetNameAsShownInCode(tostring(YGV.avatarAsset))
+    text(ygvAssetString, lowerRightQuadrantX, lowerRightQuadrantY - halfCuteCharacterMaxH + 15)
     
     popStyle()
     
