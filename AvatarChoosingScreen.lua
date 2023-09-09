@@ -3,8 +3,8 @@ local avatarOptions = {
     asset.builtin.Planet_Cute.Character_Boy,
     asset.builtin.Planet_Cute.Character_Pink_Girl,
     asset.builtin.Planet_Cute.Character_Cat_Girl,
-    asset.builtin.Tyrian_Remastered.Ship_A,
     asset.builtin.Tyrian_Remastered.Ship_B,
+    asset.builtin.Tyrian_Remastered.Ship_C,
     asset.builtin.Planet_Cute.Enemy_Bug,
     asset.builtin.SpaceCute.Beetle_Ship,
     asset.builtin.Platformer_Art.Guy_Standing,
@@ -21,36 +21,47 @@ function AvatarChoosingScreen()
         maxAvatarW = 300
         
         local savedAvatarChoice = readLocalData("avatarChoice", 1)
-        local savedAvatarSize = readLocalData("avatarSize", 100)
+        local savedAvatarWidth = readLocalData("avatarWidth", 100)
         --print(savedAvatarChoice, ": ", tostring(avatarOptions[avatarChoice]))
         
         parameter.integer("avatarChoice", 1, #avatarOptions, savedAvatarChoice, function(value)
             saveLocalData("avatarChoice", value)
         end)
         
-        parameter.number("avatarSize", 20, maxAvatarW, savedAvatarSize, function(value)
-            saveLocalData("avatarSize", value)
+        parameter.number("avatarWidth", 20, maxAvatarW, savedAvatarWidth, function(value)
+            saveLocalData("avatarWidth", value)
         end)
         
         avatarChoosingSetUp = true
     end
 
     
-    -- Define a function to draw the avatar with a background and label
+    -- Function to draw an avatar with its background and label
     function drawAvatarWithBackgroundAndLabel(quadrant, asset, spriteW, spriteH, label)
         -- Draw the background rounded rectangle
-        stroke(67, 131, 163, 142)
-        fill(67, 131, 163, 46)
-        roundedRectangle{x = quadrant.x, y = quadrant.y, w = maxAvatarW, h = 507, radius = 80}
+        stroke(67, 89, 163, 107)
+        fill(67, 89, 163, 45)
+        local halfCuteCharacterMaxH = 507 / 2
+        roundedRectangle{x = quadrant.x, y = quadrant.y, w = maxAvatarW, h = halfCuteCharacterMaxH * 2, radius = 80}
         
-        -- Draw the sprite
-        sprite(asset, quadrant.x, quadrant.y, spriteW, spriteH)
+        -- Check if the sprite size is within the allowed limit
+        if spriteW <= maxAvatarW then
+            -- Draw the sprite
+            sprite(asset, quadrant.x, quadrant.y, spriteW, spriteH)
+        else
+            -- Display the "too large" warning
+            fill(255, 0, 0, 105) 
+            textInRect("avatarWidth is too large", quadrant.x, quadrant.y, maxAvatarW-30, halfCuteCharacterMaxH*0.5)
+        end
         
-        -- Draw the label
-        fill(255)
-        fontSize(14)
-        text(label, quadrant.x, quadrant.y - (507 / 2) + 15)
+        -- Draw the label if provided
+        if label then
+            fill(255)
+            fontSize(14)
+            text(label, quadrant.x, quadrant.y - halfCuteCharacterMaxH + 15)
+        end
     end
+    
     
     
     pushStyle()
@@ -80,7 +91,7 @@ function AvatarChoosingScreen()
     local chosenAsset = avatarChoice == #avatarOptions and YGV.avatarAsset or avatarOptions[avatarChoice]
     local imageW, imageH = spriteSize(chosenAsset)
     local aspectRatio = imageH / imageW
-    local spriteW = avatarSize
+    local spriteW = avatarWidth
     local spriteH = spriteW * aspectRatio
     
     -- Visualization rectangles for each quadrant
@@ -99,25 +110,34 @@ function AvatarChoosingScreen()
     -- Draw upper left quadrant
     local chosenLabel = assetNameAsShownInCode(tostring(chosenAsset))
     drawAvatarWithBackgroundAndLabel(quadrants.upperLeft, chosenAsset, spriteW, spriteH, chosenLabel)
+    -- If the last choice is selected, overlay the word "custom" on top
+    if avatarChoice == #avatarOptions then
+        fontSize(WIDTH * 0.08)
+        fill(35, 22, 36) -- Red for the "custom" label
+        text("custom", quadrants.upperLeft.x-1, quadrants.upperLeft.y-1)
+        fill(132, 208, 224) -- Red for the "custom" label
+        text("custom", quadrants.upperLeft.x+1, quadrants.upperLeft.y+1)
+        fill(255)
+    end
     
     -- Draw the intro title and text in the upper right quadrant
 
     local introTitle = "Now let's start making YOUR game!"
-    local introText = "First, using the parameter sliders to the left, choose the avatar you want and set its size.\n\nWrite down the asset name (below the avatar) and the size shown on the slider.\n\nThen snoop to find the function 'newYourGameVariables'. In it, replace the values given to 'YGV.avatarAsset' and 'YGV.avatarSize' with the ones you wrote down."
+    local introText = "First, using the parameter sliders to the left, choose the avatar you want and set its size.\n\nWrite down the asset name (below the avatar) and the width shown on the slider.\n\nThen snoop to find the function 'newYourGameVariables'. In it, replace the values given to 'YGV.avatarAsset' and 'YGV.avatarWidth' with the ones you wrote down."
     textInRect(introTitle, quadrants.upperRight.x, quadrants.upperRight.y + (textQuadrantHeight * 0.3), textQuadrantWidth - 30, (textQuadrantHeight * 0.4) - 30)
     textInRect(introText, quadrants.upperRight.x, quadrants.upperRight.y - (textQuadrantHeight * 0.25) + 30, (textQuadrantWidth * 0.94) - 30, textQuadrantHeight * 0.56)
     
     -- Draw the asset and size texts in the lower left quadrant
     local assetString = assetNameAsShownInCode(tostring(YGV.avatarAsset))
     local assetName = assetString
-    local sizeText = YGV.avatarSize == 1 and "not set" or tostring(YGV.avatarSize)
+    local sizeText = YGV.avatarWidth == 1 and "not set" or tostring(YGV.avatarWidth)
     fontSize(WIDTH * 0.033)
     text("Asset: " .. assetName, quadrants.lowerLeft.x - (avatarQuadrantWidth / 2) + 15, quadrants.lowerLeft.y)
     text("Size: " .. sizeText, quadrants.lowerLeft.x - (avatarQuadrantWidth / 2) + 15, quadrants.lowerLeft.y - 40)
     
     -- Draw lower right quadrant
     local ygvImageW, ygvImageH = spriteSize(YGV.avatarImage)
-    local ygvSpriteW = YGV.avatarSize
+    local ygvSpriteW = YGV.avatarWidth
     local ygvSpriteH = ygvSpriteW * (ygvImageH / ygvImageW)
     local ygvLabel = assetNameAsShownInCode(tostring(YGV.avatarAsset))
     drawAvatarWithBackgroundAndLabel(quadrants.lowerRight, YGV.avatarImage, ygvSpriteW, ygvSpriteH, ygvLabel)
@@ -126,9 +146,9 @@ function AvatarChoosingScreen()
     popStyle()
        
     -- Check if the user's values match the slider values
-    local roundedAvatarSize = math.floor(YGV.avatarSize * 100 + 0.5) / 100 -- Round to two decimal places
+    local roundedAvatarWidth = math.floor(YGV.avatarWidth * 100 + 0.5) / 100 -- Round to two decimal places
     local epsilon = 0.01  -- A small threshold for floating-point comparison
-    local decimalsCloseEnough = math.abs(roundedAvatarSize - avatarSize) < epsilon
+    local decimalsCloseEnough = math.abs(roundedAvatarWidth - avatarWidth) < epsilon
     local assetsMatchIfChoiceIsNotCustom = avatarChoice ~= #avatarOptions and YGV.avatarAsset == avatarOptions[avatarChoice]
     local assetIsNotPlaceholderIfChoiceIsCustom = avatarChoice == #avatarOptions and YGV.avatarAsset ~= asset.builtin.Cargo_Bot.Star
     local assetsMatch = assetsMatchIfChoiceIsNotCustom or assetIsNotPlaceholderIfChoiceIsCustom
