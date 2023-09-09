@@ -34,116 +34,97 @@ function AvatarChoosingScreen()
         
         avatarChoosingSetUp = true
     end
+
+    
+    -- Define a function to draw the avatar with a background and label
+    function drawAvatarWithBackgroundAndLabel(quadrant, asset, spriteW, spriteH, label)
+        -- Draw the background rounded rectangle
+        stroke(67, 131, 163, 142)
+        fill(67, 131, 163, 46)
+        roundedRectangle{x = quadrant.x, y = quadrant.y, w = maxAvatarW, h = 507, radius = 80}
+        
+        -- Draw the sprite
+        sprite(asset, quadrant.x, quadrant.y, spriteW, spriteH)
+        
+        -- Draw the label
+        fill(255)
+        fontSize(14)
+        text(label, quadrant.x, quadrant.y - (507 / 2) + 15)
+    end
+    
     
     pushStyle()
     
-    background(158, 176, 154) -- Light gray background for visibility
+    background(158, 176, 154)
     fill(37, 78, 40, 181)
     strokeWidth(2)
     font("ArialRoundedMTBold")
     textAlign(CENTER)
     rectMode(CENTER)
     
-    -- Calculate the areas needed for the avatar previews
-    local chosenAsset = avatarOptions[avatarChoice]
-    if avatarChoice == #avatarOptions then
-        chosenAsset = YGV.avatarAsset
-    end
-    local imageW, imageH = spriteSize(chosenAsset)
-    local aspectRatio = imageH / imageW
-    local spriteW = avatarSize
-    local spriteH = spriteW * aspectRatio
-    local halfMaxW = maxAvatarW/2
-    local halfCuteCharacterMaxH = 507/2
-    
-    -- Calculate the dimensions for each quadrant
+    -- Define quadrant dimensions
     local avatarQuadrantWidth = maxAvatarW + 30
     local textQuadrantWidth = WIDTH - avatarQuadrantWidth
-    local avatarQuadrantHeight = math.max(HEIGHT / 2, 507 + 30) -- 507 = max height of cute characters
+    local avatarQuadrantHeight = math.max(HEIGHT / 2, 507 + 30)
     local textQuadrantHeight = HEIGHT - avatarQuadrantHeight
     
-    -- Define the X & Y values for each quadrant
-    local upperLeftQuadrantX = avatarQuadrantWidth / 2
-    local upperLeftQuadrantY = HEIGHT - (avatarQuadrantHeight / 2)
-    local upperRightQuadrantX = WIDTH - (textQuadrantWidth / 2)
-    local upperRightQuadrantY = HEIGHT - (textQuadrantHeight / 2)
-    local lowerLeftQuadrantX = textQuadrantWidth / 2
-    local lowerLeftQuadrantY = textQuadrantHeight / 2
-    local lowerRightQuadrantX = WIDTH - (avatarQuadrantWidth / 2)
-    local lowerRightQuadrantY = avatarQuadrantHeight / 2
+    -- Define quadrant centers
+    local quadrants = {
+        upperLeft = {x = avatarQuadrantWidth / 2, y = HEIGHT - (avatarQuadrantHeight / 2)},
+        upperRight = {x = WIDTH - (textQuadrantWidth / 2), y = HEIGHT - (textQuadrantHeight / 2)},
+        lowerLeft = {x = textQuadrantWidth / 2, y = textQuadrantHeight / 2},
+        lowerRight = {x = WIDTH - (avatarQuadrantWidth / 2), y = avatarQuadrantHeight / 2}
+    }
     
-    -- Upper Left Quadrant image calculations
-    local chosenAsset = avatarOptions[avatarChoice]
-    if avatarChoice == #avatarOptions then
-        chosenAsset = YGV.avatarAsset
-    end
+    -- Calculate chosen asset dimensions
+    local chosenAsset = avatarChoice == #avatarOptions and YGV.avatarAsset or avatarOptions[avatarChoice]
     local imageW, imageH = spriteSize(chosenAsset)
     local aspectRatio = imageH / imageW
     local spriteW = avatarSize
     local spriteH = spriteW * aspectRatio
-
-    -- Lower Right Quadrant image calculations
-    local ygvImageW, ygvImageH = spriteSize(YGV.avatarImage)
-    local aspectRatio = ygvImageH / ygvImageW
-    local ygvSpriteW = YGV.avatarSize
-    local ygvSpriteH = ygvSpriteW * aspectRatio
     
-    --rects to visualize each quadrant and text areas
-    local drawVisualizations = false
+    -- Visualization rectangles for each quadrant
+    local drawVisualizations = false -- Set this to true or false to toggle visualization
     if drawVisualizations then
-        fill(255, 0, 0, 50) -- Red with 50% transparency for visualization
-        rect(upperLeftQuadrantX, upperLeftQuadrantY, avatarQuadrantWidth, avatarQuadrantHeight)
-        rect(upperRightQuadrantX, upperRightQuadrantY, textQuadrantWidth, textQuadrantHeight)
-        rect(lowerLeftQuadrantX, lowerLeftQuadrantY, textQuadrantWidth, textQuadrantHeight)
-        rect(lowerRightQuadrantX, lowerRightQuadrantY, avatarQuadrantWidth, avatarQuadrantHeight)
-        rect(upperRightQuadrantX, upperRightQuadrantY + (textQuadrantHeight * 0.3), textQuadrantWidth - 30, (textQuadrantHeight * 0.4) - 30)
-        rect(upperRightQuadrantX, upperRightQuadrantY - (textQuadrantHeight * 0.25) + 30, (textQuadrantWidth * 0.94) - 30, textQuadrantHeight * 0.56)
-        rect(lowerLeftQuadrantX, lowerLeftQuadrantY, textQuadrantWidth - 30, textQuadrantHeight - 30)
+        function drawVisualizationRect(quadrant, w, h)
+            fill(255, 0, 0, 50) -- Red with 50% transparency for visualization
+            rect(quadrant.x, quadrant.y, w, h)
+        end
+        drawVisualizationRect(quadrants.upperLeft, avatarQuadrantWidth, avatarQuadrantHeight)
+        drawVisualizationRect(quadrants.upperRight, textQuadrantWidth, textQuadrantHeight)
+        drawVisualizationRect(quadrants.lowerLeft, textQuadrantWidth, textQuadrantHeight)
+        drawVisualizationRect(quadrants.lowerRight, avatarQuadrantWidth, avatarQuadrantHeight)
     end
+        
+    -- Draw upper left quadrant
+    local chosenLabel = assetNameAsShownInCode(tostring(chosenAsset))
+    drawAvatarWithBackgroundAndLabel(quadrants.upperLeft, chosenAsset, spriteW, spriteH, chosenLabel)
     
-    --upper left sprite and text 
-    stroke(67, 131, 163, 93)
-    fill(67, 131, 163, 30)
-    roundedRectangle{x = upperLeftQuadrantX, y = upperLeftQuadrantY, w = maxAvatarW, h = halfCuteCharacterMaxH * 2, radius = 80}
-    sprite(chosenAsset, upperLeftQuadrantX, upperLeftQuadrantY, spriteW, spriteH)
-    fill(255)
-    fontSize(14)
-    local sliderAssetString = assetNameAsShownInCode(tostring(avatarOptions[avatarChoice]))
-    text(sliderAssetString, upperLeftQuadrantX, upperLeftQuadrantY - halfCuteCharacterMaxH + 15)
-    
-    --upper right texts and visualization rects
-    fill(37, 78, 40, 181)
-    local introTitle = "Now let's start making YOUR game!" 
+    -- Draw the intro title and text in the upper right quadrant
+
+    local introTitle = "Now let's start making YOUR game!"
     local introText = "First, using the parameter sliders to the left, choose the avatar you want and set its size.\n\nWrite down the asset name (below the avatar) and the size shown on the slider.\n\nThen snoop to find the function 'newYourGameVariables'. In it, replace the values given to 'YGV.avatarAsset' and 'YGV.avatarSize' with the ones you wrote down."
-    textInRect(introTitle, upperRightQuadrantX, upperRightQuadrantY + (textQuadrantHeight * 0.3), textQuadrantWidth - 30, (textQuadrantHeight * 0.4) - 30)
-    textInRect(introText, upperRightQuadrantX, upperRightQuadrantY - (textQuadrantHeight * 0.25) + 30, (textQuadrantWidth * 0.94) - 30, textQuadrantHeight * 0.56)
+    textInRect(introTitle, quadrants.upperRight.x, quadrants.upperRight.y + (textQuadrantHeight * 0.3), textQuadrantWidth - 30, (textQuadrantHeight * 0.4) - 30)
+    textInRect(introText, quadrants.upperRight.x, quadrants.upperRight.y - (textQuadrantHeight * 0.25) + 30, (textQuadrantWidth * 0.94) - 30, textQuadrantHeight * 0.56)
     
-    --lower left texts
-    local assetString = tostring(YGV.avatarAsset)
-    assetString = assetNameAsShownInCode(assetString)
+    -- Draw the asset and size texts in the lower left quadrant
+    local assetString = assetNameAsShownInCode(tostring(YGV.avatarAsset))
     local assetName = assetString
     local sizeText = YGV.avatarSize == 1 and "not set" or tostring(YGV.avatarSize)
     fontSize(WIDTH * 0.033)
-    text("Asset: " .. assetName, lowerLeftQuadrantX - (avatarQuadrantWidth / 2) + 15, lowerLeftQuadrantY)
-    text("Size: " .. sizeText, lowerLeftQuadrantX - (avatarQuadrantWidth / 2) + 15, lowerLeftQuadrantY - 40)
+    text("Asset: " .. assetName, quadrants.lowerLeft.x - (avatarQuadrantWidth / 2) + 15, quadrants.lowerLeft.y)
+    text("Size: " .. sizeText, quadrants.lowerLeft.x - (avatarQuadrantWidth / 2) + 15, quadrants.lowerLeft.y - 40)
     
-    --lower left sprite
-    stroke(67, 89, 163, 107)
-    fill(67, 89, 163, 45)
-    roundedRectangle{x = lowerRightQuadrantX, y = lowerRightQuadrantY, w = maxAvatarW, h = halfCuteCharacterMaxH * 2, radius = 80}
-    if YGV.avatarSize <= maxAvatarW then
-        sprite(YGV.avatarImage, lowerRightQuadrantX, lowerRightQuadrantY, ygvSpriteW, ygvSpriteH)
-    else
-        fill(255, 0, 0, 50) -- Red with 50% transparency for visualization
-        text("assigned avatar size too large", lowerRightQuadrantX, lowerRightQuadrantY)
-    end
-    fill(255)
-    fontSize(14)
-    local ygvAssetString = assetNameAsShownInCode(tostring(YGV.avatarAsset))
-    text(ygvAssetString, lowerRightQuadrantX, lowerRightQuadrantY - halfCuteCharacterMaxH + 15)
+    -- Draw lower right quadrant
+    local ygvImageW, ygvImageH = spriteSize(YGV.avatarImage)
+    local ygvSpriteW = YGV.avatarSize
+    local ygvSpriteH = ygvSpriteW * (ygvImageH / ygvImageW)
+    local ygvLabel = assetNameAsShownInCode(tostring(YGV.avatarAsset))
+    drawAvatarWithBackgroundAndLabel(quadrants.lowerRight, YGV.avatarImage, ygvSpriteW, ygvSpriteH, ygvLabel)
+    
     
     popStyle()
-    
+       
     -- Check if the user's values match the slider values
     local roundedAvatarSize = math.floor(YGV.avatarSize * 100 + 0.5) / 100 -- Round to two decimal places
     local epsilon = 0.01  -- A small threshold for floating-point comparison
