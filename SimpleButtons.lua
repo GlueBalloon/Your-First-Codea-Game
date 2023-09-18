@@ -766,12 +766,16 @@ function button(bText, action, width, height, fontColor, x, y, specTable, imageA
         SB.ui[traceback].height = height
     end
     
-    --can't use fill() as font color so default to white
-    fontColor = fontColor or color(255)
+    --can't use fill() as font color so use defaults if needed
+    if fill()== color(255)then
+        fontColor = fontColor or color(78)
+    else
+        fontColor = fontColor or color(255)
+    end
     
     --'action' is called outside of this function
     if action then
-SB.ui[traceback].action = action
+        SB.ui[traceback].action = action
     end
     
     --get the actual x and y from the percentages
